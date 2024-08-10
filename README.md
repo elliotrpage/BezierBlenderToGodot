@@ -2,9 +2,10 @@
 Export a Bezier curve from Blender to Godot Curve3D.
 
 ## TODO:
-* Confirm python script is working for CSV
+* Confirm python script is working for CSV **YEP**
 * Remove UE4 files (Spline stuff)
 * Update Python script to spit out a Compliant TRES file instead of a CSV
+  * https://docs.godotengine.org/en/stable/classes/class_curve3d.html
 * Keep the CSV option, maybe?
 
 
