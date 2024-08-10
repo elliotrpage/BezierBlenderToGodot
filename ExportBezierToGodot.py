@@ -36,18 +36,16 @@ class ObjectExportPoints(bpy.types.Operator, ImportHelper):
                 #saveFile.write("name,px,py,pz,hlx,hly,hlz,hrx,hry,hrz\n");
                 #str = '%d,%f,%f,%f,%f,%f,%f,%f,%f,%f\n'
                 saveFile = open(self.filepath + ".tres", "w")
-                saveFile.write("[gd_resource type=\"Curve3D\" format=3]\n\n[resource]\n_data = {\n\"points\": PackedVector3Array(");
+                saveFile.write("[gd_resource type=\"Curve3D\" format=3]\n\n[resource]\n_data = {\n\"points\": PackedVector3Array(")
                 str = '%f,%f,%f,%f,%f,%f,%f,%f,%f'
 
                 for bezier in beziers:
                     for point in bezier.bezier_points:
                         if count != 1: saveFile.write(","); # Add comma if not the first line so points concatenate
-                        line = str % (\
-                            point.handle_left.x, -point.handle_left.y, point.handle_left.z, \
+                        line = str % (point.handle_left.x, -point.handle_left.y, point.handle_left.z, \
                             point.handle_right.x, -point.handle_right.y, point.handle_right.z, \
-                            point.co.x, -point.co.y, point.co.z \
-                            )
-                        saveFile.write(line);
+                            point.co.x, -point.co.y, point.co.z )
+                        saveFile.write(line)
                         count = count + 1
                 # Loop complete, now add remaining remaining items
                 saveFile.write("),\n\"tilts\": PackedFloat32Array(")
@@ -56,6 +54,7 @@ class ObjectExportPoints(bpy.types.Operator, ImportHelper):
                 while tilt <= count:
                     saveFile.write("0")
                     if tilt != count: saveFile.write(", ") # add seperator, unless its the final entry.
+                    tilt = tilt + 1
                 
                 saveFile.write(")\n}\npoint_count = " + count)
                 # Generation complete, close file
