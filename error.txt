@@ -17,3 +17,8 @@ Python: Traceback (most recent call last):
   File "/Users/elliotpage/Library/Application Support/Blender/3.4/scripts/addons/ExportBezierToGodot.py", line 57, in execute
     count = str(count) # convert to string for writing, no more use needed as an integer
 TypeError: 'str' object is not callable
+
+-------
+Oops I initially imported the wrong file into Godot.
+Works!!! 
+It looks a bit chaotic but works! May need to simplify the curve before export.
