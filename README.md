@@ -1,4 +1,14 @@
-# BezierBlenderToUE
+# BezierBlenderToGodot
+Export a Bezier curve from Blender to Godot Curve3D.
+
+## TODO:
+* Confirm python script is working for CSV
+* Remove UE4 files (Spline stuff)
+* Update Python script to spit out a Compliant TRES file instead of a CSV
+* Keep the CSV option, maybe?
+
+
+# Original README:
 Export Bezier curve from Blender to Unreal Engine 4.
 
 The article is available [here](https://medium.com/@qerrant/export-spline-from-blender-to-unreal-engine-28a4ccdd97c0). 
