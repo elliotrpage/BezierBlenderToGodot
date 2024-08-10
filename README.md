@@ -8,7 +8,9 @@ Tested against Godot 4.2, curve3d format version 3.
 * Update Python script to spit out a Compliant TRES file instead of a CSV **DONE**
   * https://docs.godotengine.org/en/stable/classes/class_curve3d.html
   * Works!
-* Imported curve (test_export_5, 303 points) looks a bit chaotic but works! May need to simplify the curve before export. Test this.
+* Imported curve (test_export_5, 303 points) looks a bit chaotic but works! (303 points) May need to simplify the curve before export. Test this.
+  * created test_export_6 with dissolve curve 0.6 in blender. (172 points)
+  * Works, perhaps a bit too much. But the point is prooven. 
 * ~~Keep the CSV option, maybe?~~ (nah)
 
 ## List
