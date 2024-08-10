@@ -37,14 +37,12 @@ class ObjectExportPoints(bpy.types.Operator, ImportHelper):
                 #str = '%d,%f,%f,%f,%f,%f,%f,%f,%f,%f\n'
                 saveFile = open(self.filepath + ".tres", "w")
                 saveFile.write("[gd_resource type=\"Curve3D\" format=3]\n\n[resource]\n_data = {\n\"points\": PackedVector3Array(")
-                str = '%f,%f,%f,%f,%f,%f,%f,%f,%f'
+                string = '%f,%f,%f,%f,%f,%f,%f,%f,%f' # renamed from "str" as it is fucking up the "convert to string" function.
 
                 for bezier in beziers:
                     for point in bezier.bezier_points:
                         if count != 1: saveFile.write(","); # Add comma if not the first line so points concatenate
-                        line = str % (point.handle_left.x, -point.handle_left.y, point.handle_left.z, \
-                            point.handle_right.x, -point.handle_right.y, point.handle_right.z, \
-                            point.co.x, -point.co.y, point.co.z )
+                        line = string % (point.handle_left.x, -point.handle_left.y, point.handle_left.z, point.handle_right.x, -point.handle_right.y, point.handle_right.z, point.co.x, -point.co.y, point.co.z )
                         saveFile.write(line)
                         count = count + 1
                 # Loop complete, now add remaining remaining items
@@ -55,8 +53,8 @@ class ObjectExportPoints(bpy.types.Operator, ImportHelper):
                     saveFile.write("0")
                     if tilt != count: saveFile.write(", ") # add seperator, unless its the final entry.
                     tilt = tilt + 1
-                
-                saveFile.write(")\n}\npoint_count = " + count)
+
+                saveFile.write(")\n}\npoint_count = " + str(count))
                 # Generation complete, close file
                 saveFile.close()
                 self.report({"INFO"}, "The curve was exported")

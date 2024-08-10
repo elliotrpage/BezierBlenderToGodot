@@ -1,0 +1,19 @@
+Python: Traceback (most recent call last):
+  File "/Users/elliotpage/Library/Application Support/Blender/3.4/scripts/addons/ExportBezierToGodot.py", line 57, in execute
+    saveFile.write(")\n}\npoint_count = " + count)
+TypeError: can only concatenate str (not "int") to str
+
+
+Python: Traceback (most recent call last):
+  File "/Users/elliotpage/Library/Application Support/Blender/3.4/scripts/addons/ExportBezierToGodot.py", line 57, in execute
+    saveFile.write(")\n}\npoint_count = " + str(count))
+TypeError: 'str' object is not callable
+
+To write a non-string value, convert it to a string using str() **before** passing it to write().
+
+No dice?
+
+Python: Traceback (most recent call last):
+  File "/Users/elliotpage/Library/Application Support/Blender/3.4/scripts/addons/ExportBezierToGodot.py", line 57, in execute
+    count = str(count) # convert to string for writing, no more use needed as an integer
+TypeError: 'str' object is not callable

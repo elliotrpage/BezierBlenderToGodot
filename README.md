@@ -8,7 +8,9 @@ Export a Bezier curve from Blender to Godot Curve3D.
   * https://docs.godotengine.org/en/stable/classes/class_curve3d.html
   * Working on this, crashed Blender oops!!
   * It created a 1.6GB TRES file??? Okay its nothing but "0, " over and over again, I have a fuckup in my logic. I forgot to increment "tilt" oooops
-* Keep the CSV option, maybe?
+  * Okay, attempt 5 seems to have worked, file looks to be properly generated.
+  * lets try importing to Godot!
+* ~~Keep the CSV option, maybe?~~ (nah)
 
 
 # Original README:
