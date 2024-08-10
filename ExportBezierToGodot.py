@@ -4,7 +4,7 @@ bl_info = {
     "name": "Export BezierCSV for Godot",
     "blender": (2, 80, 0),
     "author": "Elliot Page, Alex Z.",
-    "location": "File > Export > BezierCSV For Godot (.csv)",
+    "location": "File > Export > BezierCSV For Godot (.tres)",
     "category": "Import-Export",
 }
 
@@ -32,19 +32,33 @@ class ObjectExportPoints(bpy.types.Operator, ImportHelper):
 
             if len(beziers) > 0:        
                 count = 1
-                saveFile = open(self.filepath + ".csv", "w")
-                saveFile.write("name,px,py,pz,hlx,hly,hlz,hrx,hry,hrz\n");
-                str = '%d,%f,%f,%f,%f,%f,%f,%f,%f,%f\n'
-            
+                #saveFile = open(self.filepath + ".csv", "w")
+                #saveFile.write("name,px,py,pz,hlx,hly,hlz,hrx,hry,hrz\n");
+                #str = '%d,%f,%f,%f,%f,%f,%f,%f,%f,%f\n'
+                saveFile = open(self.filepath + ".tres", "w")
+                saveFile.write("[gd_resource type=\"Curve3D\" format=3]\n\n[resource]\n_data = {\n\"points\": PackedVector3Array(");
+                str = '%f,%f,%f,%f,%f,%f,%f,%f,%f'
+
                 for bezier in beziers:
                     for point in bezier.bezier_points:
-                        line = str % (count, \
-                            point.co.x, -point.co.y, point.co.z, \
+                        if count != 1: saveFile.write(","); # Add comma if not the first line so points concatenate
+                        line = str % (\
                             point.handle_left.x, -point.handle_left.y, point.handle_left.z, \
-                            point.handle_right.x, -point.handle_right.y, point.handle_right.z)
+                            point.handle_right.x, -point.handle_right.y, point.handle_right.z, \
+                            point.co.x, -point.co.y, point.co.z \
+                            )
                         saveFile.write(line);
                         count = count + 1
-            
+                # Loop complete, now add remaining remaining items
+                saveFile.write("),\n\"tilts\": PackedFloat32Array(")
+                # Loop for tilts here, one per point/count
+                tilt = 1
+                while tilt <= count:
+                    saveFile.write("0")
+                    if tilt != count: saveFile.write(", ") # add seperator, unless its the final entry.
+                
+                saveFile.write(")\n}\npoint_count = " + count)
+                # Generation complete, close file
                 saveFile.close()
                 self.report({"INFO"}, "The curve was exported")
                 return {'FINISHED'}
@@ -57,7 +71,7 @@ class ObjectExportPoints(bpy.types.Operator, ImportHelper):
             return {'CANCELLED'}
 
 def menu_func(self, context):
-    self.layout.operator(ObjectExportPoints.bl_idname,text="Export BezierCSV For UE4 (.csv)")
+    self.layout.operator(ObjectExportPoints.bl_idname,text="Export BezierCSV For Godot (.tres)")
 
 def register():
     bpy.utils.register_class(ObjectExportPoints)
