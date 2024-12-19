@@ -32,19 +32,26 @@ class ObjectExportPoints(bpy.types.Operator, ImportHelper):
 
             if len(beziers) > 0:        
                 count = 1
-                #saveFile = open(self.filepath + ".csv", "w")
-                #saveFile.write("name,px,py,pz,hlx,hly,hlz,hrx,hry,hrz\n");
-                #str = '%d,%f,%f,%f,%f,%f,%f,%f,%f,%f\n'
                 saveFile = open(self.filepath + ".tres", "w")
-                saveFile.write("[gd_resource type=\"Curve3D\" format=3]\n\n[resource]\n_data = {\n\"points\": PackedVector3Array(")
-                string = '%f,%f,%f,%f,%f,%f,%f,%f,%f' # renamed from "str" as it is fucking up the "convert to string" function.
+                saveFile.write("[gd_resource type=\"Curve3D\" format=3]\n\n[resource]\n_data = {\n\"points\": PackedVector3Array(") # Writes front matter and opens the array
+                string = '%f,%f,%f,%f,%f,%f,%f,%f,%f' # Each point on the curve is a series of 9 floats
 
                 for bezier in beziers:
+                    pointtotal = len(bezier) # how many points are there in the curve? We will need this later.
                     for point in bezier.bezier_points:
-                        if count != 1: saveFile.write(","); # Add comma if not the first line so points concatenate
-                        line = string % (point.handle_left.x, -point.handle_left.y, point.handle_left.z, point.handle_right.x, -point.handle_right.y, point.handle_right.z, point.co.x, -point.co.y, point.co.z )
+                        if count != 1: saveFile.write(", "); # Add a comma if not the first point so the list is concatenated properly.
+                        # If this is the first point in the curve, the "in" vector must be zeroed out.
+                        if count == 1: 
+                            line = string % (0.0, 0.0, 0.0, point.handle_right.x, -point.handle_right.y, point.handle_right.z, point.co.x, -point.co.y, point.co.z)
+                        # If this is the last point in the curve, the "out" vector must be zeroed out
+                        elif count == pointtotal:
+                            line = string % (point.handle_left.x, -point.handle_left.y, point.handle_left.z, 0.0, 0.0, 0.0 point.co.x, -point.co.y, point.co.z)
+                        # All the rest are "Main sequence" points, with both "In" and "Out" vectors
+                        else:
+                            line = string % (point.handle_left.x, -point.handle_left.y, point.handle_left.z, point.handle_right.x, -point.handle_right.y, point.handle_right.z, point.co.x, -point.co.y, point.co.z)
+                        # write the point to the list
                         saveFile.write(line)
-                        count = count + 1
+                        count = count + 1 
                 # Loop complete, now add remaining remaining items
                 saveFile.write("),\n\"tilts\": PackedFloat32Array(")
                 # Loop for tilts here, one per point/count

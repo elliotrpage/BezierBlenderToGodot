@@ -2,6 +2,10 @@
 
 Okay, lets dissect the file format. There is also a screenshot from the Godot editor to help with this.
 
+Dec 2024 note: Returning to this after errors with importing into Godot4.4Dev6. Script appears to be busted! Mismatch in number of points and the points "jumped" all over the place.
+
+Thinking about it, I believe the issue is one where Blender has In and Out values for ALL points. Godot does not "see" or record the "in" data for the first Point, nor the "out" data for the last Point.
+
 ## Front matter
 -----
 [gd_resource type="Curve3D" format=3 uid="uid://dt3v76vo6wwjt"]
@@ -14,14 +18,14 @@ format=3 comes from godot 4.2
 format=2 was seen in godot 3.6
 **For now, lets worry about 4.2**
 
-uid optional? created by the Godot engine itself, I believe. Leave out for now.
+uid optional? created by the Godot engine itself, I believe. Can be ignored.
 
 ## Data Points
 -----
 "points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.25, 0.5, 0.75, 1, 1, 1, 0, 0, 0, 1, 1, 1),
 -----
 This is the actual meat of things.
-Each Vector is a set of 9 values. Vectors are not seperated into individual points - they are concatenated into a single list. Lets look at a single data point, the "middle" one in this example.
+Each Vector is a set of 9 values. Vectors are not seperated into individual points - they are concatenated into a single list. Let's look at a single data point, the "middle" one in this example.
 
 ### Single Data Point
 -----
@@ -31,7 +35,8 @@ So, cross referencing with the in-engine example, these values break down like s
 `in-x, in-y, in-z, out-x, out-y, out-z, pos-x, pos-y, pos-z`
 This is personally surprising as I was expecting them to put position first, but hey. 
 
-Note that for the first/last nodes which do not have an "in" or "out" value this is set to blanket zeros. (0)
+Note that for the first/last nodes which do not have an "in" or "out" value this is set to blanket zeros. (0)   
+**Dec 2024 note**: It may be this was forgotten about in my version of the script.
 
 To compare to the UE4 script I am basing on, this uses "px,py,pz,hlx,hly,hlz,hrx,hry,hrz"
 hl = left (in), hr = right (out)
@@ -50,4 +55,5 @@ For now, lets leave all at 0.
 point_count = 3
 -----
 
-Integer count of the number of points in the Curve. Could be optional or have a checksum purpose but lets not leave it out!
+Integer count of the number of points in the Curve. Could be optional or have a checksum purpose but lets not leave it out!   
+Starts at 1 - it is a count, not an ID ref.
