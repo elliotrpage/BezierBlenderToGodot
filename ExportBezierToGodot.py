@@ -30,6 +30,10 @@ class ObjectExportPoints(bpy.types.Operator, ImportHelper):
                 if subcurve.type == 'BEZIER':
                     beziers.append(subcurve)
 
+            #DEBUG
+            print(beziers)
+
+            # Actual loop
             if len(beziers) > 0:        
                 count = 1
                 saveFile = open(self.filepath + ".tres", "w")
@@ -37,7 +41,7 @@ class ObjectExportPoints(bpy.types.Operator, ImportHelper):
                 string = '%f,%f,%f,%f,%f,%f,%f,%f,%f' # Each point on the curve is a series of 9 floats
 
                 for bezier in beziers:
-                    pointtotal = len(bezier) # how many points are there in the curve? We will need this later.
+                    pointtotal = len(bezier.bezier_points) # how many points are there in the curve? We will need this later.
                     for point in bezier.bezier_points:
                         if count != 1: saveFile.write(", "); # Add a comma if not the first point so the list is concatenated properly.
                         # If this is the first point in the curve, the "in" vector must be zeroed out.
@@ -45,7 +49,7 @@ class ObjectExportPoints(bpy.types.Operator, ImportHelper):
                             line = string % (0.0, 0.0, 0.0, point.handle_right.x, -point.handle_right.y, point.handle_right.z, point.co.x, -point.co.y, point.co.z)
                         # If this is the last point in the curve, the "out" vector must be zeroed out
                         elif count == pointtotal:
-                            line = string % (point.handle_left.x, -point.handle_left.y, point.handle_left.z, 0.0, 0.0, 0.0 point.co.x, -point.co.y, point.co.z)
+                            line = string % (point.handle_left.x, -point.handle_left.y, point.handle_left.z, 0.0, 0.0, 0.0, point.co.x, -point.co.y, point.co.z)
                         # All the rest are "Main sequence" points, with both "In" and "Out" vectors
                         else:
                             line = string % (point.handle_left.x, -point.handle_left.y, point.handle_left.z, point.handle_right.x, -point.handle_right.y, point.handle_right.z, point.co.x, -point.co.y, point.co.z)
@@ -56,12 +60,12 @@ class ObjectExportPoints(bpy.types.Operator, ImportHelper):
                 saveFile.write("),\n\"tilts\": PackedFloat32Array(")
                 # Loop for tilts here, one per point/count
                 tilt = 1
-                while tilt <= count:
+                while tilt <= pointtotal: # This initially used "count" which was 1 point too many.
                     saveFile.write("0")
-                    if tilt != count: saveFile.write(", ") # add seperator, unless its the final entry.
+                    if tilt != pointtotal: saveFile.write(", ") # add seperator, unless its the final entry.
                     tilt = tilt + 1
 
-                saveFile.write(")\n}\npoint_count = " + str(count))
+                saveFile.write(")\n}\npoint_count = " + str(pointtotal)) # This initially used "count" which was 1 point too many.
                 # Generation complete, close file
                 saveFile.close()
                 self.report({"INFO"}, "The curve was exported")
