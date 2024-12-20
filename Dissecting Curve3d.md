@@ -113,3 +113,9 @@ Yep, they are "Global", as exported. Blender has the ability to display as local
 Okay looks like I need to adjust the script. 
 The in/out values are relative to the location - the delta.
 So, **In/out.value - location.value = delta, relative to the location**
+
+Adjusted the script to handle this, v6 file.
+IT WORKS
+THANK CHRIST
+Its rotated, so lets fix that - v7 file
+Okay, so its still rotated but for now the shape, handles and order work so am leaving it alone.  Phew.

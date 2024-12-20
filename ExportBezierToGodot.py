@@ -44,23 +44,24 @@ class ObjectExportPoints(bpy.types.Operator, ImportHelper):
                     pointtotal = len(bezier.bezier_points) 
                     for point in bezier.bezier_points:
                         # Calculate relative positions of the in/out handles, Blender provides these as global locations, Godot wants relative positions.
+                        # also, Godot uses Y for "up" instead of Z, so lets swap these
                         inx = point.handle_left.x - point.co.x
-                        iny = point.handle_left.y - point.co.y
-                        inz = point.handle_left.z - point.co.z
+                        iny = point.handle_left.z - point.co.z
+                        inz = point.handle_left.y - point.co.y
                         oux = point.handle_right.x - point.co.x
-                        ouy = point.handle_right.y - point.co.y
-                        ouz = point.handle_right.z - point.co.z
+                        ouy = point.handle_right.z - point.co.z
+                        ouz = point.handle_right.y - point.co.y
 
                         if count != 1: saveFile.write(", "); # Add a comma if not the first point so the list is concatenated properly.
                         # If this is the first point in the curve, the "in" vector must be zeroed out.
                         if count == 1: 
-                            line = string % (0.0, 0.0, 0.0, oux, ouy, ouz, point.co.x, point.co.y, point.co.z)
+                            line = string % (0.0, 0.0, 0.0, oux, ouy, ouz, point.co.x, point.co.z, point.co.y)
                         # If this is the last point in the curve, the "out" vector must be zeroed out
                         elif count == pointtotal:
-                            line = string % (inx, iny, inz, 0.0, 0.0, 0.0, point.co.x, point.co.y, point.co.z)
+                            line = string % (inx, iny, inz, 0.0, 0.0, 0.0, point.co.x, point.co.z, point.co.y)
                         # All the rest are "Main sequence" points, with both "In" and "Out" vectors
                         else:
-                            line = string % (inx, iny, inz, oux, ouy, ouz, point.co.x, point.co.y, point.co.z)
+                            line = string % (inx, iny, inz, oux, ouy, ouz, point.co.x, point.co.z, point.co.y)
                         # write the point to the list
                         saveFile.write(line)
                         count = count + 1 
