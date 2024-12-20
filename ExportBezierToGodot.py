@@ -60,7 +60,7 @@ class ObjectExportPoints(bpy.types.Operator, ImportHelper):
                             line = string % (inx, iny, inz, 0.0, 0.0, 0.0, point.co.x, point.co.y, point.co.z)
                         # All the rest are "Main sequence" points, with both "In" and "Out" vectors
                         else:
-                            line = string % (inx, iny, inz, outx, outy, outz, point.co.x, point.co.y, point.co.z)
+                            line = string % (inx, iny, inz, oux, ouy, ouz, point.co.x, point.co.y, point.co.z)
                         # write the point to the list
                         saveFile.write(line)
                         count = count + 1 
